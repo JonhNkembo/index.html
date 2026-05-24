@@ -1,0 +1,1348 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Casamento · Menga & Helena</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script>window.jsPDF = window.jspdf && window.jspdf.jsPDF ? window.jspdf.jsPDF : window.jsPDF;</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ouro: #b8973c;
+  --ouro-claro: #d4b060;
+  --ouro-escuro: #8a6e28;
+  --marfim: #fdf8f0;
+  --creme: #f5ede0;
+  --azul-noite: #0f1624;
+  --azul-medio: #1a2540;
+  --azul-card: #1e2d4a;
+  --azul-borda: #2a3d5e;
+  --azul-input: #162035;
+  --texto: #f0e8d8;
+  --texto-suave: #8a9bb8;
+  --texto-medio: #c8d4e8;
+  --vermelho: #e05555;
+  --verde: #4caf7d;
+  --transicao: all 0.28s cubic-bezier(0.4,0,0.2,1);
+}
+
+*{margin:0;padding:0;box-sizing:border-box;}
+
+body {
+  font-family:'Jost',sans-serif;
+  background:var(--azul-noite);
+  color:var(--texto);
+  min-height:100vh;
+  overflow-x:hidden;
+}
+
+/* ---- DECORAÇÃO FUNDO ---- */
+body::before {
+  content:'';
+  position:fixed;inset:0;
+  background:
+    radial-gradient(ellipse 60% 40% at 20% 10%, rgba(184,151,60,0.07) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 35% at 80% 90%, rgba(184,151,60,0.05) 0%, transparent 60%);
+  pointer-events:none;z-index:0;
+}
+
+/* ===== LOGIN ===== */
+#login-screen {
+  position:fixed;inset:0;z-index:1000;
+  background:var(--azul-noite);
+  display:flex;align-items:center;justify-content:center;padding:20px;
+}
+
+.login-ornamento {
+  text-align:center;margin-bottom:20px;
+  font-family:'Cormorant Garamond',serif;
+  color:var(--ouro);font-size:28px;letter-spacing:0.15em;
+}
+.login-ornamento small {display:block;font-size:13px;letter-spacing:0.3em;color:var(--ouro-claro);margin-top:2px;font-style:italic;}
+
+.login-card {
+  background:var(--azul-card);
+  border:1px solid var(--azul-borda);
+  border-radius:20px;padding:48px 40px;
+  max-width:460px;width:100%;
+  text-align:center;
+  box-shadow:0 40px 100px rgba(0,0,0,0.6), 0 0 0 1px rgba(184,151,60,0.08);
+  animation:slideUp 0.5s cubic-bezier(0.4,0,0.2,1);position:relative;z-index:1;
+}
+
+.login-card::before {
+  content:'';position:absolute;inset:-1px;border-radius:21px;
+  background:linear-gradient(135deg,rgba(184,151,60,0.2) 0%,transparent 50%,rgba(184,151,60,0.1) 100%);
+  z-index:-1;pointer-events:none;
+}
+
+@keyframes slideUp{from{opacity:0;transform:translateY(32px)}to{opacity:1;transform:translateY(0)}}
+
+.login-nomes {
+  font-family:'Cormorant Garamond',serif;
+  font-size:30px;font-weight:600;
+  background:linear-gradient(135deg,var(--ouro-claro) 0%,var(--ouro) 50%,var(--ouro-escuro) 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  margin-bottom:4px;
+}
+.login-data {font-size:13px;color:var(--texto-suave);letter-spacing:0.2em;margin-bottom:32px;}
+
+.login-label {
+  display:block;text-align:left;font-size:11px;font-weight:600;
+  color:var(--ouro);text-transform:uppercase;letter-spacing:0.12em;margin-bottom:7px;
+}
+.login-input {
+  width:100%;padding:13px 16px;
+  background:var(--azul-input);border:1px solid var(--azul-borda);
+  border-radius:10px;color:var(--texto);font-size:14px;font-family:'Jost',sans-serif;
+  outline:none;transition:var(--transicao);margin-bottom:18px;
+}
+.login-input:focus{border-color:var(--ouro);box-shadow:0 0 0 3px rgba(184,151,60,0.12);}
+.login-input::placeholder{color:#3a4d6a;}
+
+.btn-login {
+  width:100%;padding:14px;
+  background:linear-gradient(135deg,var(--ouro-claro) 0%,var(--ouro-escuro) 100%);
+  border:none;border-radius:10px;
+  color:#fff;font-size:14px;font-weight:600;font-family:'Jost',sans-serif;
+  cursor:pointer;transition:var(--transicao);
+  letter-spacing:0.08em;
+}
+.btn-login:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(184,151,60,0.4);}
+
+.login-roles {
+  margin:16px 0 0;padding:14px;
+  background:var(--azul-input);border:1px solid var(--azul-borda);
+  border-radius:10px;text-align:left;
+}
+.login-roles-title{font-size:11px;color:var(--ouro);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:8px;}
+.role-chip {
+  display:inline-block;padding:4px 10px;border-radius:20px;
+  font-size:11px;margin:3px 3px 0 0;
+  background:rgba(184,151,60,0.1);border:1px solid rgba(184,151,60,0.25);color:var(--ouro-claro);
+}
+.login-erro{color:var(--vermelho);font-size:13px;margin-bottom:12px;display:none;}
+
+/* ===== APP SHELL ===== */
+#app{display:none;min-height:100vh;position:relative;z-index:1;}
+
+/* TOPBAR */
+.topbar {
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  background:rgba(15,22,36,0.9);backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--azul-borda);
+  padding:0 28px;height:62px;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.topbar-brand{
+  display:flex;align-items:center;gap:12px;
+  font-family:'Cormorant Garamond',serif;font-size:18px;
+  color:var(--ouro-claro);letter-spacing:0.1em;
+}
+.topbar-brand-amp{color:var(--ouro);font-style:italic;margin:0 2px;}
+.topbar-right{display:flex;align-items:center;gap:10px;}
+.topbar-user{font-size:13px;color:var(--texto-suave);}
+.topbar-user strong{color:var(--ouro);}
+.topbar-role-badge{
+  padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;
+  letter-spacing:0.08em;
+}
+.role-admin{background:rgba(184,151,60,0.15);border:1px solid rgba(184,151,60,0.3);color:var(--ouro);}
+.role-noivo{background:rgba(76,175,125,0.12);border:1px solid rgba(76,175,125,0.3);color:#4caf7d;}
+.role-mestre{background:rgba(100,149,237,0.12);border:1px solid rgba(100,149,237,0.3);color:#6495ed;}
+.role-convidado{background:rgba(138,155,184,0.12);border:1px solid rgba(138,155,184,0.3);color:var(--texto-suave);}
+
+.btn-sair{
+  background:transparent;border:1px solid var(--azul-borda);
+  border-radius:8px;padding:5px 12px;
+  color:var(--texto-suave);font-size:12px;cursor:pointer;
+  transition:var(--transicao);font-family:'Jost',sans-serif;
+}
+.btn-sair:hover{border-color:var(--vermelho);color:var(--vermelho);}
+
+/* NAV TABS */
+.nav-tabs {
+  position:fixed;top:62px;left:0;right:0;z-index:99;
+  background:rgba(15,22,36,0.92);backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--azul-borda);
+  display:flex;overflow-x:auto;scrollbar-width:none;padding:0 20px;
+}
+.nav-tabs::-webkit-scrollbar{display:none;}
+.nav-tab {
+  flex-shrink:0;padding:15px 20px;font-size:13px;font-weight:500;
+  color:var(--texto-suave);cursor:pointer;transition:var(--transicao);
+  border-bottom:2px solid transparent;
+  display:flex;align-items:center;gap:7px;white-space:nowrap;
+}
+.nav-tab:hover{color:var(--texto-medio);}
+.nav-tab.active{color:var(--ouro);border-bottom-color:var(--ouro);}
+
+/* MAIN */
+.main-content{margin-top:114px;padding:28px;min-height:calc(100vh - 114px);}
+.page{display:none;}
+.page.active{display:block;animation:fadeIn 0.3s ease;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+/* PAGE HEADER */
+.page-header{margin-bottom:28px;}
+.page-header h1{
+  font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:600;
+  color:var(--ouro-claro);margin-bottom:4px;
+}
+.page-header p{color:var(--texto-suave);font-size:14px;}
+
+/* CARD */
+.card{
+  background:var(--azul-card);border:1px solid var(--azul-borda);
+  border-radius:14px;padding:24px;margin-bottom:20px;
+}
+.card-title{
+  font-family:'Cormorant Garamond',serif;font-size:16px;font-weight:600;
+  color:var(--ouro);margin-bottom:18px;display:flex;align-items:center;gap:8px;
+  letter-spacing:0.05em;
+}
+.card-title::before{content:'◆';font-size:8px;color:var(--ouro-escuro);}
+
+/* GRIDS */
+.grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+.grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;}
+@media(max-width:700px){
+  .grid-2,.grid-3,.grid-4{grid-template-columns:1fr;}
+  .main-content{padding:16px;}
+  .topbar{padding:0 16px;}
+}
+
+/* FORM */
+.form-group{margin-bottom:18px;}
+.form-label{
+  display:block;font-size:11px;font-weight:600;
+  color:var(--ouro);text-transform:uppercase;
+  letter-spacing:0.1em;margin-bottom:7px;
+}
+.form-label .req{color:var(--vermelho);margin-left:3px;}
+.form-input,.form-select{
+  width:100%;padding:12px 14px;
+  background:var(--azul-input);border:1px solid var(--azul-borda);
+  border-radius:10px;color:var(--texto);font-size:14px;font-family:'Jost',sans-serif;
+  outline:none;transition:var(--transicao);-webkit-appearance:none;
+}
+.form-select{cursor:pointer;}
+.form-input:focus,.form-select:focus{border-color:var(--ouro);box-shadow:0 0 0 3px rgba(184,151,60,0.12);}
+.form-input::placeholder{color:#2a3d5e;}
+textarea.form-input{resize:vertical;min-height:90px;}
+
+/* BUTTONS */
+.btn{
+  padding:11px 22px;border-radius:10px;
+  font-size:13px;font-weight:600;font-family:'Jost',sans-serif;
+  cursor:pointer;transition:var(--transicao);border:none;
+  display:inline-flex;align-items:center;gap:8px;letter-spacing:0.05em;
+}
+.btn-primary{
+  background:linear-gradient(135deg,var(--ouro-claro),var(--ouro-escuro));
+  color:#fff;box-shadow:0 4px 16px rgba(184,151,60,0.2);
+}
+.btn-primary:hover{transform:translateY(-1px);box-shadow:0 6px 24px rgba(184,151,60,0.35);}
+.btn-secondary{
+  background:var(--azul-input);border:1px solid var(--azul-borda);
+  color:var(--texto-medio);
+}
+.btn-secondary:hover{border-color:var(--ouro);color:var(--ouro);}
+.btn-danger{
+  background:rgba(224,85,85,0.1);border:1px solid rgba(224,85,85,0.3);
+  color:var(--vermelho);
+}
+.btn-danger:hover{background:rgba(224,85,85,0.2);}
+.btn-success{
+  background:rgba(76,175,125,0.15);border:1px solid rgba(76,175,125,0.3);
+  color:var(--verde);
+}
+.btn-success:hover{background:rgba(76,175,125,0.25);}
+.btn-sm{padding:7px 14px;font-size:12px;}
+.btn-group{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px;}
+
+/* BADGE */
+.badge{
+  display:inline-flex;align-items:center;
+  padding:3px 9px;border-radius:20px;font-size:11px;font-weight:600;
+}
+.badge-verde{background:rgba(76,175,125,0.12);color:var(--verde);}
+.badge-vermelho{background:rgba(224,85,85,0.12);color:var(--vermelho);}
+.badge-ouro{background:rgba(184,151,60,0.12);color:var(--ouro);}
+.badge-cinza{background:rgba(138,155,184,0.12);color:var(--texto-suave);}
+.badge-azul{background:rgba(100,149,237,0.12);color:#6495ed;}
+
+/* STATS */
+.stat-card{
+  background:var(--azul-card);border:1px solid var(--azul-borda);
+  border-radius:12px;padding:20px;
+}
+.stat-label{font-size:11px;color:var(--texto-suave);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:10px;}
+.stat-value{font-family:'Cormorant Garamond',serif;font-size:34px;font-weight:600;}
+.stat-value.ouro{color:var(--ouro);}
+.stat-value.verde{color:var(--verde);}
+.stat-value.vermelho{color:var(--vermelho);}
+.stat-value.azul{color:#6495ed;}
+.stat-sub{font-size:12px;color:var(--texto-suave);margin-top:4px;}
+
+/* TABLE */
+.table-wrap{overflow-x:auto;}
+table{width:100%;border-collapse:collapse;font-size:13px;}
+thead th{
+  padding:11px 14px;text-align:left;
+  background:var(--azul-input);color:var(--ouro);font-size:11px;
+  font-weight:600;text-transform:uppercase;letter-spacing:0.08em;
+  border-bottom:1px solid var(--azul-borda);white-space:nowrap;
+}
+tbody tr{border-bottom:1px solid rgba(42,61,94,0.5);transition:var(--transicao);}
+tbody tr:hover{background:rgba(30,45,74,0.6);}
+tbody td{padding:11px 14px;color:var(--texto-medio);vertical-align:middle;}
+
+/* TOAST */
+#toast{
+  position:fixed;bottom:24px;right:24px;z-index:9999;
+  background:var(--azul-card);border:1px solid var(--azul-borda);
+  border-radius:12px;padding:14px 20px;font-size:14px;font-weight:500;
+  box-shadow:0 8px 32px rgba(0,0,0,0.5);
+  transform:translateX(140%);transition:transform 0.3s cubic-bezier(0.4,0,0.2,1);
+  display:flex;align-items:center;gap:10px;max-width:320px;
+}
+#toast.show{transform:translateX(0);}
+#toast.success{border-color:var(--verde);}
+#toast.error{border-color:var(--vermelho);}
+
+/* MODAL */
+.modal-overlay{
+  position:fixed;inset:0;z-index:500;
+  background:rgba(0,0,0,0.75);backdrop-filter:blur(4px);
+  display:flex;align-items:center;justify-content:center;
+  padding:20px;opacity:0;pointer-events:none;transition:opacity 0.2s;
+}
+.modal-overlay.open{opacity:1;pointer-events:all;}
+.modal{
+  background:var(--azul-card);border:1px solid var(--azul-borda);
+  border-radius:16px;padding:28px;max-width:480px;width:100%;
+  transform:scale(0.95);transition:transform 0.2s;max-height:80vh;overflow-y:auto;
+}
+.modal-overlay.open .modal{transform:scale(1);}
+.modal-title{
+  font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:600;
+  color:var(--ouro);margin-bottom:18px;
+}
+.modal-footer{display:flex;gap:10px;justify-content:flex-end;margin-top:20px;}
+
+/* AGENDA ITEM */
+.agenda-item{
+  display:flex;gap:14px;padding:14px 0;
+  border-bottom:1px solid rgba(42,61,94,0.5);
+}
+.agenda-item:last-child{border-bottom:none;}
+.agenda-hora{
+  font-family:'Cormorant Garamond',serif;font-size:22px;
+  color:var(--ouro);min-width:70px;text-align:right;font-weight:600;
+}
+.agenda-info{flex:1;}
+.agenda-titulo{font-size:14px;font-weight:500;color:var(--texto);margin-bottom:3px;}
+.agenda-desc{font-size:13px;color:var(--texto-suave);}
+
+/* MENSAGEM */
+.mensagem-item{
+  background:var(--azul-input);border:1px solid var(--azul-borda);
+  border-radius:12px;padding:16px;margin-bottom:12px;
+}
+.mensagem-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;}
+.mensagem-autor{font-weight:600;font-size:13px;color:var(--ouro-claro);}
+.mensagem-data{font-size:11px;color:var(--texto-suave);}
+.mensagem-texto{font-size:14px;color:var(--texto-medio);line-height:1.5;}
+
+/* CONFIRMAÇÃO CONVIDADO */
+.confirmacao-hero{
+  text-align:center;padding:48px 24px;
+}
+.confirmacao-nomes{
+  font-family:'Cormorant Garamond',serif;font-size:38px;font-weight:600;
+  background:linear-gradient(135deg,var(--ouro-claro),var(--ouro));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  margin-bottom:6px;line-height:1.2;
+}
+.confirmacao-amp{font-style:italic;font-size:42px;}
+.confirmacao-sub{color:var(--texto-suave);font-size:14px;letter-spacing:0.15em;margin-bottom:36px;}
+
+/* EMPTY STATE */
+.empty-state{text-align:center;padding:48px 24px;color:var(--texto-suave);}
+.empty-state-icon{font-size:40px;margin-bottom:12px;opacity:0.3;}
+.empty-state h3{font-family:'Cormorant Garamond',serif;font-size:18px;color:var(--texto-medio);margin-bottom:6px;}
+
+/* PROGRESS */
+.prog-bar{height:6px;background:var(--azul-borda);border-radius:3px;overflow:hidden;margin-top:8px;}
+.prog-fill{height:100%;background:linear-gradient(90deg,var(--ouro-claro),var(--ouro-escuro));border-radius:3px;transition:width 0.6s ease;}
+
+/* CHEGADA STATUS */
+.convidado-row-chegou td{background:rgba(76,175,125,0.05);}
+
+::-webkit-scrollbar{width:6px;height:6px;}
+::-webkit-scrollbar-track{background:var(--azul-noite);}
+::-webkit-scrollbar-thumb{background:var(--azul-borda);border-radius:3px;}
+::-webkit-scrollbar-thumb:hover{background:#3a4d6e;}
+</style>
+</head>
+<body>
+
+<!-- ===== LOGIN ===== -->
+<div id="login-screen">
+  <div style="width:100%;max-width:460px;position:relative;z-index:1;">
+    <div class="login-ornamento">
+      ✦ &nbsp; Casamento &nbsp; ✦
+      <small>Uíge · Angola</small>
+    </div>
+    <div class="login-card">
+      <div class="login-nomes">Menga <span class="login-amp" style="font-style:italic;">&</span> Helena</div>
+      <div class="login-data">PORTAL DE ACESSO</div>
+
+      <div id="login-erro" class="login-erro">Credenciais inválidas. Tente novamente.</div>
+
+      <label class="login-label">Utilizador</label>
+      <input type="text" class="login-input" id="login-user" placeholder="Digite o seu nome de utilizador..." autocomplete="off">
+      <label class="login-label">Senha</label>
+      <input type="password" class="login-input" id="login-pass" placeholder="Digite a sua senha..." onkeydown="if(event.key==='Enter')fazerLogin()">
+
+      <button class="btn-login" onclick="fazerLogin()">Entrar no Sistema →</button>
+
+      <div class="login-roles">
+        <div class="login-roles-title">Perfis de Acesso</div>
+        <span class="role-chip">👑 Administrador</span>
+        <span class="role-chip">💍 Noivos</span>
+        <span class="role-chip">🎤 Mestre de Cerimónia</span>
+        <span class="role-chip">🎊 Convidado</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== APP ===== -->
+<div id="app">
+
+  <div class="topbar">
+    <div class="topbar-brand">
+      Menga <span class="topbar-brand-amp">&</span> Helena
+    </div>
+    <div class="topbar-right">
+      <div class="topbar-user">Olá, <strong id="topbar-nome">—</strong></div>
+      <span id="topbar-badge" class="topbar-role-badge role-admin">—</span>
+      <button class="btn-sair" onclick="fazerLogout()">Sair</button>
+    </div>
+  </div>
+
+  <div class="nav-tabs" id="nav-tabs">
+    <!-- gerado dinamicamente por role -->
+  </div>
+
+  <div class="main-content">
+
+    <!-- ===== DASHBOARD ===== -->
+    <div class="page active" id="page-dashboard">
+      <div class="page-header">
+        <h1>✦ Painel Geral</h1>
+        <p>Visão geral do casamento de Menga Manuel Ngoma & Helena João Destino</p>
+      </div>
+
+      <div class="grid-4" id="stats-dashboard" style="margin-bottom:20px;"></div>
+
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-title">Presenças por Mesa</div>
+          <div id="stats-mesas"></div>
+        </div>
+        <div class="card">
+          <div class="card-title">Chegadas Recentes</div>
+          <div id="chegadas-recentes"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== CONVIDADOS (ADMIN) ===== -->
+    <div class="page" id="page-convidados">
+      <div class="page-header">
+        <h1>🎊 Gestão de Convidados</h1>
+        <p>Cadastre, edite e acompanhe todos os convidados.</p>
+      </div>
+
+      <div class="card" id="form-convidado-card">
+        <div class="card-title" id="form-convidado-titulo">Adicionar Convidado</div>
+        <div class="grid-2">
+          <div class="form-group">
+            <label class="form-label">Nome Completo <span class="req">*</span></label>
+            <input type="text" class="form-input" id="c-nome" placeholder="Nome do convidado">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Telefone</label>
+            <input type="text" class="form-input" id="c-tel" placeholder="+244 9XX XXX XXX">
+          </div>
+        </div>
+        <div class="grid-3">
+          <div class="form-group">
+            <label class="form-label">Grupo / Lado <span class="req">*</span></label>
+            <select class="form-select" id="c-grupo">
+              <option value="">Selecione...</option>
+              <option value="Família Noivo">Família Noivo</option>
+              <option value="Família Noiva">Família Noiva</option>
+              <option value="Amigos Noivo">Amigos Noivo</option>
+              <option value="Amigos Noiva">Amigos Noiva</option>
+              <option value="Colegas">Colegas</option>
+              <option value="Outros">Outros</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Mesa</label>
+            <input type="text" class="form-input" id="c-mesa" placeholder="Ex: Mesa 1">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Código de Confirmação</label>
+            <input type="text" class="form-input" id="c-codigo" placeholder="Gerado automaticamente" readonly style="color:var(--ouro);">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Observações</label>
+          <textarea class="form-input" id="c-obs" placeholder="Restrições alimentares, necessidades especiais..."></textarea>
+        </div>
+        <div class="btn-group">
+          <button class="btn btn-primary" id="btn-guardar-convidado" onclick="guardarConvidado()">+ Adicionar Convidado</button>
+          <button class="btn btn-secondary" id="btn-cancelar-convidado" onclick="cancelarEdicaoConvidado()" style="display:none">Cancelar</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:16px;">
+          <div class="card-title" style="margin-bottom:0;">Lista de Convidados (<span id="total-convidados">0</span>)</div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;">
+            <input type="text" class="form-input" id="filtro-conv" placeholder="🔍 Pesquisar..." style="width:180px;" oninput="renderConvidados()">
+            <select class="form-select" id="filtro-grupo-conv" style="width:160px;" onchange="renderConvidados()">
+              <option value="">Todos os grupos</option>
+              <option value="Família Noivo">Família Noivo</option>
+              <option value="Família Noiva">Família Noiva</option>
+              <option value="Amigos Noivo">Amigos Noivo</option>
+              <option value="Amigos Noiva">Amigos Noiva</option>
+              <option value="Colegas">Colegas</option>
+              <option value="Outros">Outros</option>
+            </select>
+            <select class="form-select" id="filtro-status-conv" style="width:150px;" onchange="renderConvidados()">
+              <option value="">Todos os status</option>
+              <option value="Confirmado">Confirmado</option>
+              <option value="Pendente">Pendente</option>
+              <option value="Recusado">Recusado</option>
+            </select>
+            <button class="btn btn-secondary btn-sm" onclick="exportarConvidadosPDF()">📄 PDF</button>
+            <button class="btn btn-secondary btn-sm" onclick="exportarConvidadosExcel()">📊 Excel</button>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Nome</th>
+                <th>Grupo</th>
+                <th>Mesa</th>
+                <th>Código</th>
+                <th>Status</th>
+                <th>Chegada</th>
+                <th>Acções</th>
+              </tr>
+            </thead>
+            <tbody id="tbody-convidados"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== CONFIRMAÇÃO CONVIDADO ===== -->
+    <div class="page" id="page-confirmacao">
+      <div class="confirmacao-hero">
+        <div class="confirmacao-nomes">
+          Menga Manuel Ngoma<br>
+          <span class="confirmacao-amp">&</span><br>
+          Helena João Destino
+        </div>
+        <div class="confirmacao-sub">CONFIRME A SUA PRESENÇA</div>
+      </div>
+
+      <div class="card" style="max-width:520px;margin:0 auto;">
+        <div class="card-title">A Sua Confirmação</div>
+        <div class="form-group">
+          <label class="form-label">Código de Convidado <span class="req">*</span></label>
+          <input type="text" class="form-input" id="conf-codigo" placeholder="Insira o código que recebeu..." style="font-family:'Cormorant Garamond',serif;font-size:18px;color:var(--ouro);letter-spacing:0.1em;text-transform:uppercase;" oninput="this.value=this.value.toUpperCase()">
+        </div>
+        <div id="conf-info" style="display:none;padding:14px;background:var(--azul-input);border:1px solid var(--azul-borda);border-radius:10px;margin-bottom:16px;">
+          <div style="font-size:14px;color:var(--ouro-claro);margin-bottom:6px;font-family:'Cormorant Garamond',serif;font-size:18px;" id="conf-nome-display">—</div>
+          <div style="font-size:12px;color:var(--texto-suave);" id="conf-grupo-display">—</div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Confirmação de Presença <span class="req">*</span></label>
+          <div style="display:flex;gap:10px;">
+            <button class="btn btn-success" id="btn-conf-sim" onclick="selecionarPresenca('Confirmado')" style="flex:1;">✓ Confirmo Presença</button>
+            <button class="btn btn-danger" id="btn-conf-nao" onclick="selecionarPresenca('Recusado')" style="flex:1;">✗ Não Poderei Ir</button>
+          </div>
+          <input type="hidden" id="conf-status-val">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Mensagem para os Noivos (opcional)</label>
+          <textarea class="form-input" id="conf-msg" placeholder="Deixe uma mensagem carinhosa para Menga e Helena..."></textarea>
+        </div>
+        <div class="btn-group">
+          <button class="btn btn-primary" onclick="confirmarPresenca()" style="width:100%;">Enviar Confirmação →</button>
+        </div>
+        <div id="conf-sucesso" style="display:none;text-align:center;padding:32px;">
+          <div style="font-size:40px;margin-bottom:12px;">💍</div>
+          <div style="font-family:'Cormorant Garamond',serif;font-size:22px;color:var(--ouro);margin-bottom:8px;">Confirmação Recebida!</div>
+          <div style="font-size:14px;color:var(--texto-suave);" id="conf-msg-final"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== CHEGADAS (MESTRE / NOIVOS / ADMIN) ===== -->
+    <div class="page" id="page-chegadas">
+      <div class="page-header">
+        <h1>🚪 Registo de Chegadas</h1>
+        <p>Marque a chegada dos convidados em tempo real.</p>
+      </div>
+
+      <div class="grid-2" style="margin-bottom:20px;">
+        <div class="stat-card">
+          <div class="stat-label">Chegaram</div>
+          <div class="stat-value verde" id="s-chegaram">0</div>
+          <div class="stat-sub" id="s-chegaram-pct">de 0 confirmados</div>
+          <div class="prog-bar"><div class="prog-fill" id="prog-chegaram" style="width:0%"></div></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Ainda a aguardar</div>
+          <div class="stat-value azul" id="s-aguardar">0</div>
+          <div class="stat-sub">confirmados que não chegaram</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Marcar Chegada por Código</div>
+        <div style="display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap;">
+          <div class="form-group" style="flex:1;margin-bottom:0;">
+            <label class="form-label">Código do Convidado</label>
+            <input type="text" class="form-input" id="chegada-codigo" placeholder="Digite o código..." style="text-transform:uppercase;" oninput="this.value=this.value.toUpperCase()" onkeydown="if(event.key==='Enter')marcarChegada()">
+          </div>
+          <button class="btn btn-primary" onclick="marcarChegada()">✓ Registar Chegada</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:16px;">
+          <div class="card-title" style="margin-bottom:0;">Lista de Presença</div>
+          <input type="text" class="form-input" id="filtro-chegadas" placeholder="🔍 Pesquisar..." style="width:200px;" oninput="renderChegadas()">
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th>#</th><th>Nome</th><th>Grupo</th><th>Mesa</th><th>Status</th><th>Hora Chegada</th><th>Acção</th></tr>
+            </thead>
+            <tbody id="tbody-chegadas"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== AGENDA (MESTRE / TODOS) ===== -->
+    <div class="page" id="page-agenda">
+      <div class="page-header">
+        <h1>📋 Agenda da Cerimónia</h1>
+        <p>Programa detalhado do evento.</p>
+      </div>
+
+      <div class="card" id="form-agenda-card" style="display:none;">
+        <div class="card-title">Adicionar Item à Agenda</div>
+        <div class="grid-3">
+          <div class="form-group">
+            <label class="form-label">Hora <span class="req">*</span></label>
+            <input type="time" class="form-input" id="ag-hora">
+          </div>
+          <div class="form-group" style="grid-column:span 2;">
+            <label class="form-label">Título <span class="req">*</span></label>
+            <input type="text" class="form-input" id="ag-titulo" placeholder="Ex: Entrada dos Noivos">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Descrição</label>
+          <input type="text" class="form-input" id="ag-desc" placeholder="Detalhes do momento...">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Responsável</label>
+          <input type="text" class="form-input" id="ag-resp" placeholder="Quem conduz este momento?">
+        </div>
+        <div class="btn-group">
+          <button class="btn btn-primary" onclick="adicionarAgenda()">+ Adicionar</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div id="lista-agenda">
+          <div class="empty-state">
+            <div class="empty-state-icon">📋</div>
+            <h3>Agenda ainda não definida</h3>
+            <p>O Mestre de Cerimónia adicionará o programa.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== MENSAGENS ===== -->
+    <div class="page" id="page-mensagens">
+      <div class="page-header">
+        <h1>💌 Mensagens dos Convidados</h1>
+        <p>Mensagens carinhosas recebidas na confirmação de presença.</p>
+      </div>
+
+      <div id="lista-mensagens">
+        <div class="empty-state">
+          <div class="empty-state-icon">💌</div>
+          <h3>Nenhuma mensagem ainda</h3>
+          <p>As mensagens aparecerão quando os convidados confirmarem a presença.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== UTILIZADORES (ADMIN) ===== -->
+    <div class="page" id="page-utilizadores">
+      <div class="page-header">
+        <h1>👥 Gestão de Utilizadores</h1>
+        <p>Cadastre utilizadores e defina os seus papéis no sistema.</p>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Adicionar Utilizador</div>
+        <div class="grid-2">
+          <div class="form-group">
+            <label class="form-label">Nome Completo <span class="req">*</span></label>
+            <input type="text" class="form-input" id="u-nome" placeholder="Nome do utilizador">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Nome de Utilizador <span class="req">*</span></label>
+            <input type="text" class="form-input" id="u-user" placeholder="Login (sem espaços)">
+          </div>
+        </div>
+        <div class="grid-2">
+          <div class="form-group">
+            <label class="form-label">Senha <span class="req">*</span></label>
+            <input type="password" class="form-input" id="u-pass" placeholder="Senha de acesso">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Papel / Role <span class="req">*</span></label>
+            <select class="form-select" id="u-role">
+              <option value="">Selecione o papel...</option>
+              <option value="admin">👑 Administrador</option>
+              <option value="noivo">💍 Noivo/Noiva</option>
+              <option value="mestre">🎤 Mestre de Cerimónia</option>
+            </select>
+          </div>
+        </div>
+        <div class="btn-group">
+          <button class="btn btn-primary" onclick="guardarUtilizador()">+ Criar Utilizador</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Utilizadores Registados</div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th>#</th><th>Nome</th><th>Utilizador</th><th>Papel</th><th>Criado por</th><th>Acções</th></tr>
+            </thead>
+            <tbody id="tbody-utilizadores"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /main-content -->
+</div><!-- /app -->
+
+<!-- MODAL CONFIRMAÇÃO -->
+<div class="modal-overlay" id="modal-confirmar">
+  <div class="modal">
+    <div class="modal-title" id="modal-titulo">Confirmar</div>
+    <div id="modal-corpo"></div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="fecharModal()">Cancelar</button>
+      <button class="btn btn-danger" id="modal-btn-ok" onclick="">Confirmar</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div id="toast"><span id="toast-icon">✓</span><span id="toast-msg">—</span></div>
+
+<script>
+// ==================== STATE ====================
+let DB = {
+  utilizadores: [],
+  convidados: [],
+  agenda: [],
+  mensagens: []
+};
+let sessaoAtual = null;
+let editandoConvidadoId = null;
+
+// ==================== INIT ====================
+function init() {
+  const saved = localStorage.getItem('casamento_mh_db');
+  if (saved) DB = JSON.parse(saved);
+
+  // Garante admin Nkembo sempre existe
+  if (!DB.utilizadores.find(u => u.username === 'nkembo')) {
+    DB.utilizadores.unshift({
+      id: 'u_admin',
+      nome: 'Nkembo',
+      username: 'nkembo',
+      password: 'nkembo2024',
+      role: 'admin',
+      criadoPor: 'Sistema'
+    });
+    salvar();
+  }
+
+  const sessaoGuardada = sessionStorage.getItem('sessao_mh');
+  if (sessaoGuardada) {
+    sessaoAtual = JSON.parse(sessaoGuardada);
+    mostrarApp();
+  }
+}
+
+function salvar() {
+  localStorage.setItem('casamento_mh_db', JSON.stringify(DB));
+}
+
+// ==================== AUTH ====================
+function fazerLogin() {
+  const user = document.getElementById('login-user').value.trim().toLowerCase();
+  const pass = document.getElementById('login-pass').value.trim();
+  const erro = document.getElementById('login-erro');
+
+  // Convidado: login por código
+  const conv = DB.convidados.find(c => c.codigo.toLowerCase() === user);
+  if (conv) {
+    sessaoAtual = { id: conv.id, nome: conv.nome, role: 'convidado', codigo: conv.codigo };
+    sessionStorage.setItem('sessao_mh', JSON.stringify(sessaoAtual));
+    erro.style.display = 'none';
+    mostrarApp();
+    return;
+  }
+
+  // Utilizador registado
+  const u = DB.utilizadores.find(u => u.username.toLowerCase() === user && u.password === pass);
+  if (u) {
+    sessaoAtual = { id: u.id, nome: u.nome, role: u.role };
+    sessionStorage.setItem('sessao_mh', JSON.stringify(sessaoAtual));
+    erro.style.display = 'none';
+    mostrarApp();
+    return;
+  }
+
+  erro.style.display = 'block';
+}
+
+function fazerLogout() {
+  sessionStorage.removeItem('sessao_mh');
+  sessaoAtual = null;
+  document.getElementById('app').style.display = 'none';
+  document.getElementById('login-screen').style.display = 'flex';
+  document.getElementById('login-user').value = '';
+  document.getElementById('login-pass').value = '';
+}
+
+// ==================== NAVEGAÇÃO ====================
+const NAV_POR_ROLE = {
+  admin: [
+    { id: 'dashboard', icon: '◆', label: 'Painel' },
+    { id: 'convidados', icon: '🎊', label: 'Convidados' },
+    { id: 'chegadas', icon: '🚪', label: 'Chegadas' },
+    { id: 'agenda', icon: '📋', label: 'Agenda' },
+    { id: 'mensagens', icon: '💌', label: 'Mensagens' },
+    { id: 'utilizadores', icon: '👥', label: 'Utilizadores' }
+  ],
+  noivo: [
+    { id: 'dashboard', icon: '◆', label: 'Painel' },
+    { id: 'convidados', icon: '🎊', label: 'Convidados' },
+    { id: 'chegadas', icon: '🚪', label: 'Chegadas' },
+    { id: 'agenda', icon: '📋', label: 'Agenda' },
+    { id: 'mensagens', icon: '💌', label: 'Mensagens' }
+  ],
+  mestre: [
+    { id: 'chegadas', icon: '🚪', label: 'Chegadas' },
+    { id: 'agenda', icon: '📋', label: 'Agenda' },
+    { id: 'mensagens', icon: '💌', label: 'Mensagens' }
+  ],
+  convidado: [
+    { id: 'confirmacao', icon: '💍', label: 'Minha Confirmação' },
+    { id: 'agenda', icon: '📋', label: 'Programa' }
+  ]
+};
+
+function mostrarApp() {
+  document.getElementById('login-screen').style.display = 'none';
+  document.getElementById('app').style.display = 'block';
+
+  document.getElementById('topbar-nome').textContent = sessaoAtual.nome;
+
+  const badge = document.getElementById('topbar-badge');
+  const labels = { admin: '👑 Admin', noivo: '💍 Noivos', mestre: '🎤 Mestre', convidado: '🎊 Convidado' };
+  const cls = { admin: 'role-admin', noivo: 'role-noivo', mestre: 'role-mestre', convidado: 'role-convidado' };
+  badge.textContent = labels[sessaoAtual.role] || sessaoAtual.role;
+  badge.className = 'topbar-role-badge ' + (cls[sessaoAtual.role] || '');
+
+  const tabs = NAV_POR_ROLE[sessaoAtual.role] || [];
+  const nav = document.getElementById('nav-tabs');
+  nav.innerHTML = tabs.map(t =>
+    `<div class="nav-tab" id="tab-${t.id}" onclick="irPara('${t.id}')">${t.icon} ${t.label}</div>`
+  ).join('');
+
+  // Form agenda visível apenas para mestre e admin
+  const formAg = document.getElementById('form-agenda-card');
+  if (formAg) formAg.style.display = ['admin','mestre'].includes(sessaoAtual.role) ? 'block' : 'none';
+
+  irPara(tabs[0]?.id || 'dashboard');
+  renderTudo();
+}
+
+function irPara(pag) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  const pg = document.getElementById('page-' + pag);
+  const tb = document.getElementById('tab-' + pag);
+  if (pg) pg.classList.add('active');
+  if (tb) tb.classList.add('active');
+  if (pag === 'dashboard') renderDashboard();
+  if (pag === 'mensagens') renderMensagens();
+}
+
+// ==================== RENDER GERAL ====================
+function renderTudo() {
+  renderConvidados();
+  renderChegadas();
+  renderAgenda();
+  renderMensagens();
+  renderUtilizadores();
+  renderDashboard();
+}
+
+// ==================== DASHBOARD ====================
+function renderDashboard() {
+  const total = DB.convidados.length;
+  const confirmados = DB.convidados.filter(c => c.status === 'Confirmado').length;
+  const chegaram = DB.convidados.filter(c => c.chegou).length;
+  const pendentes = DB.convidados.filter(c => c.status === 'Pendente').length;
+
+  document.getElementById('stats-dashboard').innerHTML = `
+    <div class="stat-card"><div class="stat-label">Total Convidados</div><div class="stat-value ouro">${total}</div><div class="stat-sub">cadastrados</div></div>
+    <div class="stat-card"><div class="stat-label">Confirmados</div><div class="stat-value verde">${confirmados}</div><div class="stat-sub">${total ? Math.round(confirmados/total*100) : 0}% do total</div></div>
+    <div class="stat-card"><div class="stat-label">Chegaram</div><div class="stat-value azul">${chegaram}</div><div class="stat-sub">de ${confirmados} confirmados</div></div>
+    <div class="stat-card"><div class="stat-label">Pendentes</div><div class="stat-value vermelho">${pendentes}</div><div class="stat-sub">sem resposta</div></div>
+  `;
+
+  // Por grupo
+  const grupos = {};
+  DB.convidados.forEach(c => { grupos[c.grupo] = (grupos[c.grupo]||0)+1; });
+  const gHtml = Object.entries(grupos).map(([g,n]) =>
+    `<div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(42,61,94,0.4);font-size:14px;">
+      <span style="color:var(--texto-medio);">${g}</span>
+      <span style="color:var(--ouro);font-weight:600;">${n}</span>
+    </div>`
+  ).join('') || '<div class="empty-state" style="padding:24px;"><p>Nenhum convidado ainda.</p></div>';
+  document.getElementById('stats-mesas').innerHTML = gHtml;
+
+  // Chegadas recentes
+  const rec = DB.convidados.filter(c => c.chegou && c.horaChegada).sort((a,b) => b.horaChegada.localeCompare(a.horaChegada)).slice(0,5);
+  const recHtml = rec.length ? rec.map(c =>
+    `<div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(42,61,94,0.4);font-size:13px;">
+      <span style="color:var(--texto-medio);">${c.nome}</span>
+      <span style="color:var(--verde);">${c.horaChegada}</span>
+    </div>`
+  ).join('') : '<div class="empty-state" style="padding:24px;"><p>Nenhuma chegada registada.</p></div>';
+  document.getElementById('chegadas-recentes').innerHTML = recHtml;
+}
+
+// ==================== CONVIDADOS ====================
+function gerarCodigo() {
+  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  let cod = 'MH-';
+  for (let i=0; i<5; i++) cod += chars[Math.floor(Math.random()*chars.length)];
+  return cod;
+}
+
+function guardarConvidado() {
+  const nome = document.getElementById('c-nome').value.trim();
+  const grupo = document.getElementById('c-grupo').value;
+  if (!nome || !grupo) { toast('Preencha Nome e Grupo.', 'error'); return; }
+
+  if (editandoConvidadoId) {
+    const c = DB.convidados.find(c => c.id === editandoConvidadoId);
+    if (c) {
+      c.nome = nome;
+      c.tel = document.getElementById('c-tel').value.trim();
+      c.grupo = grupo;
+      c.mesa = document.getElementById('c-mesa').value.trim();
+      c.obs = document.getElementById('c-obs').value.trim();
+    }
+    cancelarEdicaoConvidado();
+    toast('Convidado actualizado!', 'success');
+  } else {
+    const codigo = document.getElementById('c-codigo').value || gerarCodigo();
+    if (DB.convidados.find(c => c.codigo === codigo)) { toast('Código já existe!', 'error'); return; }
+    DB.convidados.push({
+      id: 'c_' + Date.now(),
+      nome, tel: document.getElementById('c-tel').value.trim(),
+      grupo, mesa: document.getElementById('c-mesa').value.trim(),
+      codigo, obs: document.getElementById('c-obs').value.trim(),
+      status: 'Pendente', chegou: false, horaChegada: '',
+      mensagem: '', dataCriacao: new Date().toISOString()
+    });
+    limparFormConvidado();
+    toast('Convidado adicionado!', 'success');
+  }
+  salvar(); renderConvidados(); renderDashboard();
+}
+
+function limparFormConvidado() {
+  ['c-nome','c-tel','c-mesa','c-obs'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('c-grupo').value = '';
+  document.getElementById('c-codigo').value = gerarCodigo();
+}
+
+function cancelarEdicaoConvidado() {
+  editandoConvidadoId = null;
+  document.getElementById('form-convidado-titulo').textContent = 'Adicionar Convidado';
+  document.getElementById('btn-guardar-convidado').textContent = '+ Adicionar Convidado';
+  document.getElementById('btn-cancelar-convidado').style.display = 'none';
+  limparFormConvidado();
+}
+
+function editarConvidado(id) {
+  const c = DB.convidados.find(c => c.id === id);
+  if (!c) return;
+  editandoConvidadoId = id;
+  document.getElementById('c-nome').value = c.nome;
+  document.getElementById('c-tel').value = c.tel || '';
+  document.getElementById('c-grupo').value = c.grupo;
+  document.getElementById('c-mesa').value = c.mesa || '';
+  document.getElementById('c-codigo').value = c.codigo;
+  document.getElementById('c-obs').value = c.obs || '';
+  document.getElementById('form-convidado-titulo').textContent = 'Editar Convidado';
+  document.getElementById('btn-guardar-convidado').textContent = '✓ Guardar Alterações';
+  document.getElementById('btn-cancelar-convidado').style.display = 'inline-flex';
+  document.getElementById('form-convidado-card').scrollIntoView({behavior:'smooth'});
+}
+
+function removerConvidado(id) {
+  DB.convidados = DB.convidados.filter(c => c.id !== id);
+  salvar(); renderConvidados(); renderDashboard();
+  toast('Convidado removido.', 'success');
+}
+
+function renderConvidados() {
+  const filtro = (document.getElementById('filtro-conv')?.value||'').toLowerCase();
+  const grupo = document.getElementById('filtro-grupo-conv')?.value||'';
+  const status = document.getElementById('filtro-status-conv')?.value||'';
+  const total = document.getElementById('total-convidados');
+
+  let lista = DB.convidados.filter(c =>
+    (!filtro || c.nome.toLowerCase().includes(filtro) || c.codigo.toLowerCase().includes(filtro)) &&
+    (!grupo || c.grupo === grupo) &&
+    (!status || c.status === status)
+  );
+  if (total) total.textContent = DB.convidados.length;
+
+  const isAdmin = sessaoAtual?.role === 'admin';
+  const tbody = document.getElementById('tbody-convidados');
+  if (!tbody) return;
+
+  tbody.innerHTML = lista.length ? lista.map((c,i) => `
+    <tr class="${c.chegou?'convidado-row-chegou':''}">
+      <td style="color:var(--texto-suave);">${i+1}</td>
+      <td style="font-weight:500;color:var(--texto);">${c.nome}</td>
+      <td>${c.grupo}</td>
+      <td>${c.mesa||'—'}</td>
+      <td style="font-family:'Cormorant Garamond',serif;font-size:15px;color:var(--ouro);letter-spacing:0.1em;">${c.codigo}</td>
+      <td>${badgeStatus(c.status)}</td>
+      <td>${c.chegou ? `<span class="badge badge-verde">✓ ${c.horaChegada}</span>` : '<span class="badge badge-cinza">Aguarda</span>'}</td>
+      <td>
+        ${isAdmin ? `<button class="btn btn-secondary btn-sm" onclick="editarConvidado('${c.id}')">✏</button>
+        <button class="btn btn-danger btn-sm" onclick="removerConvidado('${c.id}')">✕</button>` : ''}
+      </td>
+    </tr>`).join('') : `<tr><td colspan="8"><div class="empty-state" style="padding:24px;"><h3>Nenhum convidado encontrado</h3></div></td></tr>`;
+}
+
+function badgeStatus(s) {
+  const m = { 'Confirmado':'badge-verde','Recusado':'badge-vermelho','Pendente':'badge-cinza' };
+  return `<span class="badge ${m[s]||'badge-cinza'}">${s}</span>`;
+}
+
+// ==================== CONFIRMAÇÃO CONVIDADO ====================
+function confirmarPresenca() {
+  const codigo = document.getElementById('conf-codigo').value.trim().toUpperCase();
+  const status = document.getElementById('conf-status-val').value;
+  const msg = document.getElementById('conf-msg').value.trim();
+
+  if (!codigo) { toast('Insira o seu código.', 'error'); return; }
+  if (!status) { toast('Selecione a sua confirmação.', 'error'); return; }
+
+  const c = DB.convidados.find(c => c.codigo === codigo);
+  if (!c) { toast('Código não encontrado.', 'error'); return; }
+
+  c.status = status;
+  if (msg) {
+    c.mensagem = msg;
+    DB.mensagens.push({ id: 'm_' + Date.now(), convidadoId: c.id, nome: c.nome, texto: msg, data: new Date().toLocaleString('pt-PT') });
+  }
+  salvar();
+
+  const msgs = { 'Confirmado': `A sua presença foi confirmada! Esperamo-lo(a) no dia especial de Menga e Helena. 💍`, 'Recusado': 'Agradecemos a sua resposta. Obrigado!' };
+  document.getElementById('conf-msg-final').textContent = msgs[status] || '';
+  document.getElementById('conf-sucesso').style.display = 'block';
+  document.querySelector('.confirmacao-hero').style.display = 'none';
+  document.querySelector('#page-confirmacao .card').querySelector('.card-title').style.display = 'none';
+  document.querySelectorAll('#page-confirmacao .form-group, #page-confirmacao .btn-group').forEach(e => e.style.display = 'none');
+  document.getElementById('conf-sucesso').style.display = 'block';
+
+  renderDashboard();
+  toast('Confirmação enviada!', 'success');
+}
+
+function selecionarPresenca(val) {
+  document.getElementById('conf-status-val').value = val;
+  document.getElementById('btn-conf-sim').style.opacity = val==='Confirmado'?'1':'0.5';
+  document.getElementById('btn-conf-nao').style.opacity = val==='Recusado'?'1':'0.5';
+}
+
+document.addEventListener('input', function(e) {
+  if (e.target.id === 'conf-codigo') {
+    const cod = e.target.value.trim().toUpperCase();
+    const c = DB.convidados.find(x => x.codigo === cod);
+    const info = document.getElementById('conf-info');
+    if (c) {
+      document.getElementById('conf-nome-display').textContent = c.nome;
+      document.getElementById('conf-grupo-display').textContent = c.grupo + (c.mesa ? ' · ' + c.mesa : '');
+      info.style.display = 'block';
+    } else { info.style.display = 'none'; }
+  }
+});
+
+// ==================== CHEGADAS ====================
+function marcarChegada() {
+  const cod = document.getElementById('chegada-codigo').value.trim().toUpperCase();
+  if (!cod) { toast('Digite o código.', 'error'); return; }
+  const c = DB.convidados.find(c => c.codigo === cod);
+  if (!c) { toast('Código não encontrado!', 'error'); return; }
+  if (c.chegou) { toast(`${c.nome} já foi registado(a)!`, 'error'); return; }
+  if (c.status !== 'Confirmado') { toast(`${c.nome} não confirmou presença.`, 'error'); return; }
+
+  c.chegou = true;
+  c.horaChegada = new Date().toLocaleTimeString('pt-PT', {hour:'2-digit',minute:'2-digit'});
+  salvar();
+  document.getElementById('chegada-codigo').value = '';
+  renderChegadas(); renderDashboard();
+  toast(`✓ ${c.nome} chegou!`, 'success');
+}
+
+function desfazerChegada(id) {
+  const c = DB.convidados.find(c => c.id === id);
+  if (c) { c.chegou = false; c.horaChegada = ''; salvar(); renderChegadas(); renderDashboard(); }
+}
+
+function renderChegadas() {
+  const conf = DB.convidados.filter(c => c.status === 'Confirmado');
+  const chegaram = conf.filter(c => c.chegou).length;
+  const aguardar = conf.length - chegaram;
+  const pct = conf.length ? Math.round(chegaram/conf.length*100) : 0;
+
+  const sc = document.getElementById('s-chegaram');
+  const sa = document.getElementById('s-aguardar');
+  const sp = document.getElementById('s-chegaram-pct');
+  const pg = document.getElementById('prog-chegaram');
+  if(sc) sc.textContent = chegaram;
+  if(sa) sa.textContent = aguardar;
+  if(sp) sp.textContent = `de ${conf.length} confirmados (${pct}%)`;
+  if(pg) pg.style.width = pct + '%';
+
+  const filtro = (document.getElementById('filtro-chegadas')?.value||'').toLowerCase();
+  const isAdmin = ['admin','mestre'].includes(sessaoAtual?.role);
+
+  let lista = DB.convidados.filter(c => c.status === 'Confirmado' &&
+    (!filtro || c.nome.toLowerCase().includes(filtro) || c.codigo.toLowerCase().includes(filtro))
+  ).sort((a,b) => (b.chegou?1:0)-(a.chegou?1:0));
+
+  const tbody = document.getElementById('tbody-chegadas');
+  if (!tbody) return;
+  tbody.innerHTML = lista.length ? lista.map((c,i) => `
+    <tr class="${c.chegou?'convidado-row-chegou':''}">
+      <td style="color:var(--texto-suave);">${i+1}</td>
+      <td style="font-weight:500;color:var(--texto);">${c.nome}</td>
+      <td>${c.grupo}</td>
+      <td>${c.mesa||'—'}</td>
+      <td>${badgeStatus(c.status)}</td>
+      <td>${c.chegou ? `<span class="badge badge-verde">✓ ${c.horaChegada}</span>` : '<span class="badge badge-cinza">Aguarda</span>'}</td>
+      <td>${isAdmin && c.chegou ? `<button class="btn btn-secondary btn-sm" onclick="desfazerChegada('${c.id}')">Desfazer</button>` : ''}</td>
+    </tr>`).join('') : `<tr><td colspan="7"><div class="empty-state" style="padding:24px;"><h3>Nenhum convidado confirmado</h3></div></td></tr>`;
+}
+
+// ==================== AGENDA ====================
+function adicionarAgenda() {
+  const hora = document.getElementById('ag-hora').value;
+  const titulo = document.getElementById('ag-titulo').value.trim();
+  if (!hora || !titulo) { toast('Hora e Título são obrigatórios.', 'error'); return; }
+
+  DB.agenda.push({
+    id: 'ag_' + Date.now(),
+    hora, titulo,
+    desc: document.getElementById('ag-desc').value.trim(),
+    resp: document.getElementById('ag-resp').value.trim()
+  });
+  DB.agenda.sort((a,b) => a.hora.localeCompare(b.hora));
+  salvar(); renderAgenda();
+  ['ag-hora','ag-titulo','ag-desc','ag-resp'].forEach(id => document.getElementById(id).value = '');
+  toast('Item adicionado à agenda!', 'success');
+}
+
+function removerAgenda(id) {
+  DB.agenda = DB.agenda.filter(a => a.id !== id);
+  salvar(); renderAgenda();
+}
+
+function renderAgenda() {
+  const el = document.getElementById('lista-agenda');
+  if (!el) return;
+  const isEdit = ['admin','mestre'].includes(sessaoAtual?.role);
+
+  el.innerHTML = DB.agenda.length ? DB.agenda.map(a => `
+    <div class="agenda-item">
+      <div class="agenda-hora">${a.hora}</div>
+      <div class="agenda-info">
+        <div class="agenda-titulo">${a.titulo}</div>
+        ${a.desc ? `<div class="agenda-desc">${a.desc}</div>` : ''}
+        ${a.resp ? `<div class="agenda-desc" style="color:var(--ouro);margin-top:3px;">👤 ${a.resp}</div>` : ''}
+      </div>
+      ${isEdit ? `<button class="btn btn-danger btn-sm" onclick="removerAgenda('${a.id}')">✕</button>` : ''}
+    </div>`).join('') : `<div class="empty-state"><div class="empty-state-icon">📋</div><h3>Agenda vazia</h3><p>Adicione itens ao programa acima.</p></div>`;
+}
+
+// ==================== MENSAGENS ====================
+function renderMensagens() {
+  const el = document.getElementById('lista-mensagens');
+  if (!el) return;
+  el.innerHTML = DB.mensagens.length ? DB.mensagens.map(m => `
+    <div class="mensagem-item">
+      <div class="mensagem-header">
+        <span class="mensagem-autor">💌 ${m.nome}</span>
+        <span class="mensagem-data">${m.data}</span>
+      </div>
+      <div class="mensagem-texto">"${m.texto}"</div>
+    </div>`).join('') : `<div class="empty-state"><div class="empty-state-icon">💌</div><h3>Nenhuma mensagem ainda</h3><p>As mensagens aparecem quando os convidados confirmam a presença.</p></div>`;
+}
+
+// ==================== UTILIZADORES ====================
+function guardarUtilizador() {
+  const nome = document.getElementById('u-nome').value.trim();
+  const user = document.getElementById('u-user').value.trim().toLowerCase();
+  const pass = document.getElementById('u-pass').value.trim();
+  const role = document.getElementById('u-role').value;
+
+  if (!nome || !user || !pass || !role) { toast('Preencha todos os campos.', 'error'); return; }
+  if (DB.utilizadores.find(u => u.username === user)) { toast('Nome de utilizador já existe!', 'error'); return; }
+
+  DB.utilizadores.push({ id:'u_'+Date.now(), nome, username:user, password:pass, role, criadoPor: sessaoAtual?.nome||'Admin' });
+  salvar(); renderUtilizadores();
+  ['u-nome','u-user','u-pass'].forEach(id => document.getElementById(id).value='');
+  document.getElementById('u-role').value='';
+  toast('Utilizador criado!', 'success');
+}
+
+function removerUtilizador(id) {
+  if (id === 'u_admin') { toast('Não pode remover o administrador principal.', 'error'); return; }
+  DB.utilizadores = DB.utilizadores.filter(u => u.id !== id);
+  salvar(); renderUtilizadores(); toast('Utilizador removido.', 'success');
+}
+
+function renderUtilizadores() {
+  const tbody = document.getElementById('tbody-utilizadores');
+  if (!tbody) return;
+  const labels = { admin:'👑 Admin', noivo:'💍 Noivos', mestre:'🎤 Mestre' };
+  tbody.innerHTML = DB.utilizadores.map((u,i) => `
+    <tr>
+      <td style="color:var(--texto-suave);">${i+1}</td>
+      <td style="font-weight:500;color:var(--texto);">${u.nome}</td>
+      <td style="color:var(--ouro);font-family:'Cormorant Garamond',serif;font-size:15px;">${u.username}</td>
+      <td>${labels[u.role]||u.role}</td>
+      <td style="color:var(--texto-suave);">${u.criadoPor}</td>
+      <td>${u.id!=='u_admin' ? `<button class="btn btn-danger btn-sm" onclick="removerUtilizador('${u.id}')">✕</button>` : '<span style="color:var(--texto-suave);font-size:12px;">Protegido</span>'}</td>
+    </tr>`).join('');
+}
+
+// ==================== EXPORTAÇÃO ====================
+function exportarConvidadosPDF() {
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF();
+  doc.setFontSize(18);
+  doc.setTextColor(184,151,60);
+  doc.text('Casamento - Menga & Helena', 14, 20);
+  doc.setFontSize(11);
+  doc.setTextColor(100);
+  doc.text('Lista de Convidados', 14, 28);
+
+  const rows = DB.convidados.map((c,i) => [i+1, c.nome, c.grupo, c.mesa||'—', c.codigo, c.status, c.chegou?'✓ '+c.horaChegada:'—']);
+  doc.autoTable({
+    head:[['#','Nome','Grupo','Mesa','Código','Status','Chegada']],
+    body: rows, startY:34,
+    styles:{fontSize:9, cellPadding:3},
+    headStyles:{fillColor:[184,151,60], textColor:255}
+  });
+  doc.save('convidados_menga_helena.pdf');
+  toast('PDF exportado!', 'success');
+}
+
+function exportarConvidadosExcel() {
+  const ws = XLSX.utils.json_to_sheet(DB.convidados.map((c,i) => ({
+    '#': i+1, 'Nome': c.nome, 'Grupo': c.grupo, 'Mesa': c.mesa||'', 'Código': c.codigo,
+    'Telefone': c.tel||'', 'Status': c.status, 'Chegou': c.chegou?'Sim':'Não', 'Hora Chegada': c.horaChegada||''
+  })));
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, 'Convidados');
+  XLSX.writeFile(wb, 'convidados_menga_helena.xlsx');
+  toast('Excel exportado!', 'success');
+}
+
+// ==================== TOAST ====================
+function toast(msg, tipo='success') {
+  const el = document.getElementById('toast');
+  const ic = document.getElementById('toast-icon');
+  const mc = document.getElementById('toast-msg');
+  el.className = '';
+  el.classList.add(tipo);
+  ic.textContent = tipo==='success' ? '✓' : '✕';
+  mc.textContent = msg;
+  el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), 3000);
+}
+
+// ==================== MODAL ====================
+function fecharModal() {
+  document.getElementById('modal-confirmar').classList.remove('open');
+}
+
+// ==================== AUTO CÓDIGO ============================
+document.addEventListener('DOMContentLoaded', function() {
+  const inp = document.getElementById('c-codigo');
+  if (inp) inp.value = gerarCodigo();
+});
+
+// ==================== START ====================
+init();
+</script>
+</body>
+</html>
